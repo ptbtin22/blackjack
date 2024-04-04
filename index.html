@@ -1,31 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Page Title</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlackJack</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
   </head>
-
   <body>
-    <div class="layout">
-      <h2>Dealer Hand</h2>
-      <div class="wrapper">
-        <div class="cards" id="dealer"></div>
-      </div>
-      <h2>Player Hand</h2>
-      <div class="wrapper">
-        <div class="cards" id="player"></div>
-      </div>
-      <div class="wrapper">
-        <div class="container" id="button-container">
-          <button id="hit-button">Hit</button>
-          <button id="pass-button">Pass</button>
-        </div>
-      </div>
-      <div class="background" id="notice">
-        <div class="notice">
-          <p></p>
-          <button id="next-hand-button">Deal Next Hand</button>
-        </div>
-      </div>
+    <h2>Dealer's Hand:<span id="dealer-sum"></span></h2>
+    <div id="dealer-cards">
+      <img src="PNG-cards-1.3/down_card.jpg" />
+      <img src="PNG-cards-1.3/10_of_hearts.png" />
     </div>
+
+    <h2>Player's Hand:<span id="player-sum"></span></h2>
+    <div id="player-cards">
+      <img src="PNG-cards-1.3/king_of_spades.png" />
+      <img src="PNG-cards-1.3/ace_of_hearts.png" />
+    </div>
+
+    <br />
+    <button id="hit">Hit</button>
+    <button id="stay">Stay</button>
+    <p id="result"></p>
   </body>
 </html>
