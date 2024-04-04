@@ -1,7 +1,9 @@
 "use strict";
 
-/* const VALUES = [
-  "A",
+let cardImg = document.getElementById("img");
+
+const VALUES = [
+  "ace",
   "2",
   "3",
   "4",
@@ -11,12 +13,12 @@
   "8",
   "9",
   "10",
-  "J",
-  "Q",
-  "K",
+  "jack",
+  "queen",
+  "king",
 ];
 
-const SUITS = ["♠️", "♣️", "♦️", "♥"];
+const SUITS = ["spades", "clubs", "diamonds", "hearts"];
 
 class Card {
   constructor(value, suit) {
@@ -24,8 +26,9 @@ class Card {
     this.suit = suit;
   }
   get cardPoints() {
-    if (this.value == "J" || this.value == "Q" || this.value == "K") return 10;
-    else if (this.value == "A") return 11;
+    if (this.value == "jack" || this.value == "queen" || this.value == "king")
+      return 10;
+    else if (this.value == "ace") return 11;
     else {
       return parseInt(this.value);
     }
@@ -42,7 +45,7 @@ class Hand {
     this.points += card.cardPoints;
     if (this.points > 21) {
       for (let i = 0; i < this.cards.length; i++) {
-        if (this.cards[i].value == "A") {
+        if (this.cards[i].value == "ace") {
           this.points -= 10;
           this.cards[i].value = "1"; // change this so that next time it won't subtract another 10
           if (this.points <= 21) break;
@@ -53,20 +56,25 @@ class Hand {
   busted() {
     return this.points > 21;
   }
-  showCard() {
-    let res = "";
-    this.cards.forEach((card) => {
-      res += `${card.value == "1" ? "A" : card.value}${card.suit} `;
-    });
-    return res;
+  showHand(kind) {
+    if (kind === 1) {
+      this.cards.forEach((card) => {
+        let cardImg = document.createElement("img");
+        cardImg.src = `PNG-cards-1.3/${card.value}_of_${card.suit}.png`;
+        document.getElementById("dealer-cards").append(cardImg);
+      });
+    } else if (kind === 2) {
+      this.cards.forEach((card) => {
+        let cardImg = document.createElement("img");
+        cardImg.src = `PNG-cards-1.3/${card.value}_of_${card.suit}.png`;
+        document.getElementById("player-cards").append(cardImg);
+      });
+    }
   }
   showCard_Hidden() {
     return `${this.cards[0].value + this.cards[0].suit}  (hidden)`;
   }
 }
-
-const playerHand = new Hand();
-const dealerHand = new Hand();
 
 let allDecks = [];
 
@@ -91,14 +99,12 @@ const shuffleDeck = (num = 1) => {
   }
 };
 
-shuffleDeck();
-
 const dealCards = () => {
   for (let i = 0; i < 4; i++) {
     if (i % 2 === 0) {
-      playerHand.addCard(allDecks[i]);
+      playerHand.addCard(allDecks.pop());
     } else {
-      dealerHand.addCard(allDecks[i]);
+      dealerHand.addCard(allDecks.pop());
     }
   }
 };
@@ -106,29 +112,29 @@ const dealCards = () => {
 function hasBlackJack(hand) {
   return (
     ((hand.cards[0].value == "10" ||
-      hand.cards[0].value == "J" ||
-      hand.cards[0].value == "Q" ||
-      hand.cards[0].value == "K") &&
-      hand.cards[1].value == "A") ||
+      hand.cards[0].value == "jack" ||
+      hand.cards[0].value == "queen" ||
+      hand.cards[0].value == "king") &&
+      hand.cards[1].value == "ace") ||
     ((hand.cards[1].value == "10" ||
-      hand.cards[1].value == "J" ||
-      hand.cards[1].value == "Q" ||
-      hand.cards[1].value == "K") &&
-      hand.cards[0].value == "A")
+      hand.cards[1].value == "jack" ||
+      hand.cards[1].value == "queen" ||
+      hand.cards[1].value == "king") &&
+      hand.cards[0].value == "ace")
   );
 }
 
-let idx = 4;
+const playerHand = new Hand();
+const dealerHand = new Hand();
 
-dealCards();
+window.onload = function () {
+  shuffleDeck();
+  dealCards();
+  dealerHand.showHand(1);
+  playerHand.showHand(2);
+};
 
-console.log("Early game");
-console.log("Cards are dealt");
-
-console.log("Player's hand:", playerHand.showCard(), playerHand.points);
-console.log("Dealer's hand:", dealerHand.showCard_Hidden());
-
-if (hasBlackJack(playerHand)) {
+/* if (hasBlackJack(playerHand)) {
   console.log("Player has BlackJack!");
   console.log(
     "Dealer's hand revealed:",
@@ -171,5 +177,4 @@ if (hasBlackJack(playerHand)) {
       console.log("Dealer wins");
     }
   }
-}
- */
+} */
