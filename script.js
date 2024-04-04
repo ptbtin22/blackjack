@@ -44,7 +44,7 @@ class Hand {
       for (let i = 0; i < this.cards.length; i++) {
         if (this.cards[i].value == "A") {
           this.points -= 10;
-          this.cards[i].value = "1"; // change this so that next time it won't subtract anther 10
+          this.cards[i].value = "1"; // change this so that next time it won't subtract another 10
           if (this.points <= 21) break;
         }
       }
