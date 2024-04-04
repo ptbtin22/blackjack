@@ -1,6 +1,6 @@
 "use strict";
 
-const VALUES = [
+/* const VALUES = [
   "A",
   "2",
   "3",
@@ -172,3 +172,4 @@ if (hasBlackJack(playerHand)) {
     }
   }
 }
+ */
