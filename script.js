@@ -149,23 +149,29 @@ if (hasBlackJack(playerHand)) {
       playerHand.addCard(allDecks[idx++]);
       console.log("Player's hand:", playerHand.showCard(), playerHand.points);
     }
-  } while (!playerHand.busted);
+  } while (!playerHand.busted());
   console.log(
     "Dealer's hand revealed:",
     dealerHand.showCard(),
     dealerHand.points
   );
-  if (playerHand.busted() || hasBlackJack(dealerHand)) {
+  if (
+    playerHand.busted() ||
+    hasBlackJack(dealerHand) ||
+    dealerHand.points > playerHand.points
+  ) {
     console.log("Dealer wins!");
+  } else if (dealerHand.points == playerHand.points) {
+    console.log("It's a draw!");
   } else {
-    while (dealerHand.points < playerHand.points) {
+    while (dealerHand.points <= playerHand.points) {
       dealerHand.addCard(allDecks[idx++]);
       if (dealerHand.busted()) {
         console.log("Dealer's hand:", dealerHand.showCard(), dealerHand.points);
         console.log("Dealer busted! Player wins!");
         break;
       }
-      if (dealerHand.points >= playerHand.points) {
+      if (dealerHand.points > playerHand.points) {
         console.log("Dealer's hand:", dealerHand.showCard(), dealerHand.points);
         console.log("Dealer wins!");
         break;
