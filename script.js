@@ -44,6 +44,7 @@ class Hand {
       for (let i = 0; i < this.cards.length; i++) {
         if (this.cards[i].value == "A") {
           this.points -= 10;
+          this.cards[i].value = "1"; // change this so that next time it won't subtract anther 10
           if (this.points <= 21) break;
         }
       }
@@ -113,8 +114,7 @@ function hasBlackJack(hand) {
       hand.cards[1].value == "J" ||
       hand.cards[1].value == "Q" ||
       hand.cards[1].value == "K") &&
-      hand.cards[0].value == "A") ||
-    (hand.cards[0].value == "A" && hand.cards[1].value == "A")
+      hand.cards[0].value == "A")
   );
 }
 
@@ -141,45 +141,58 @@ if (hasBlackJack(playerHand)) {
     console.log("You win!");
   }
 } else {
-  do {
-    const playerChoice = prompt("Hit or stay: ");
-    if (playerChoice.toLowerCase() == "stay") {
-      break;
-    } else if (playerChoice.toLowerCase() == "hit") {
-      playerHand.addCard(allDecks[idx++]);
-      console.log("Player's hand:", playerHand.showCard(), playerHand.points);
-    }
-  } while (!playerHand.busted());
-  console.log(
-    "Dealer's hand revealed:",
-    dealerHand.showCard(),
-    dealerHand.points
-  );
-  if (
-    playerHand.busted() ||
-    hasBlackJack(dealerHand) ||
-    dealerHand.points > playerHand.points
-  ) {
-    console.log("Dealer wins!");
-  } else if (dealerHand.points == playerHand.points) {
-    console.log("It's a draw!");
+  if (hasBlackJack(dealerHand)) {
+    console.log("Sorry, dealer has BlackJack! Dealer wins!");
+    console.log("Dealer's hand:", dealerHand.showCard(), dealerHand.points);
   } else {
-    while (dealerHand.points <= playerHand.points) {
+    do {
+      const playerChoice = prompt("Hit or stay: ");
+      if (playerChoice.toLowerCase() == "stay") {
+        break;
+      } else if (playerChoice.toLowerCase() == "hit") {
+        playerHand.addCard(allDecks[idx++]);
+        console.log("Player's hand:", playerHand.showCard(), playerHand.points);
+      }
+    } while (!playerHand.busted());
+    console.log(
+      "Dealer's hand revealed:",
+      dealerHand.showCard(),
+      dealerHand.points
+    );
+    while (dealerHand.points < 17) {
       dealerHand.addCard(allDecks[idx++]);
-      if (dealerHand.busted()) {
-        console.log("Dealer's hand:", dealerHand.showCard(), dealerHand.points);
-        console.log("Dealer busted! Player wins!");
-        break;
-      }
-      if (dealerHand.points > playerHand.points) {
-        console.log("Dealer's hand:", dealerHand.showCard(), dealerHand.points);
-        console.log("Dealer wins!");
-        break;
-      }
+      console.log("Dealer's hand:", dealerHand.showCard(), dealerHand.points);
+    }
+    if (dealerHand.busted() && playerHand.busted()) {
+      console.log("It's a draw!");
+    } else if (dealerHand.busted && !playerHand.busted()) {
+      console.log("Player wins!");
+    } else {
+      console.log("Dealer wins");
     }
   }
+
+  // if (
+  //   playerHand.busted() ||
+  //   hasBlackJack(dealerHand) ||
+  //   (!playerHand.busted() && dealerHand.points > playerHand.points)
+  // ) {
+  //   console.log("Dealer wins!");
+  // } else if (dealerHand.points == playerHand.points) {
+  //   console.log("It's a draw!");
+  // } else {
+  //   while (dealerHand.points < 17) {
+  //     dealerHand.addCard(allDecks[idx++]);
+  //     if (dealerHand.busted()) {
+  //       console.log("Dealer's hand:", dealerHand.showCard(), dealerHand.points);
+  //       console.log("Dealer busted! Player wins!");
+  //       break;
+  //     }
+  //     if (dealerHand.points >= playerHand.points) {
+  //       console.log("Dealer's hand:", dealerHand.showCard(), dealerHand.points);
+  //       console.log("Dealer wins!");
+  //       break;
+  //     }
+  //   }
+  // }
 }
-/* chien thuat::: tinh truoc cac con bai khong phai At, chua At lai tinh diem cuoi cung
-    neu trong tay nguoi choi da co 21 diem, viec 'hit' chac chan se dan den busted du` la` quan At
-    A A 
-*/
