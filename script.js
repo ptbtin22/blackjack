@@ -56,7 +56,7 @@ class Hand {
   showCard() {
     let res = "";
     this.cards.forEach((card) => {
-      res += `${card.value}${card.suit} `;
+      res += `${card.value == "1" ? "A" : card.value}${card.suit} `;
     });
     return res;
   }
@@ -171,28 +171,4 @@ if (hasBlackJack(playerHand)) {
       console.log("Dealer wins");
     }
   }
-
-  // if (
-  //   playerHand.busted() ||
-  //   hasBlackJack(dealerHand) ||
-  //   (!playerHand.busted() && dealerHand.points > playerHand.points)
-  // ) {
-  //   console.log("Dealer wins!");
-  // } else if (dealerHand.points == playerHand.points) {
-  //   console.log("It's a draw!");
-  // } else {
-  //   while (dealerHand.points < 17) {
-  //     dealerHand.addCard(allDecks[idx++]);
-  //     if (dealerHand.busted()) {
-  //       console.log("Dealer's hand:", dealerHand.showCard(), dealerHand.points);
-  //       console.log("Dealer busted! Player wins!");
-  //       break;
-  //     }
-  //     if (dealerHand.points >= playerHand.points) {
-  //       console.log("Dealer's hand:", dealerHand.showCard(), dealerHand.points);
-  //       console.log("Dealer wins!");
-  //       break;
-  //     }
-  //   }
-  // }
 }
