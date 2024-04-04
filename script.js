@@ -155,12 +155,12 @@ if (hasBlackJack(playerHand)) {
     dealerHand.showCard(),
     dealerHand.points
   );
-  if (dealerHand.busted() || hasBlackJack(dealerHand)) {
+  if (playerHand.busted() || hasBlackJack(dealerHand)) {
     console.log("Dealer wins!");
   } else {
     while (dealerHand.points < playerHand.points) {
       dealerHand.addCard(allDecks[idx++]);
-      if (dealerHand.busted) {
+      if (dealerHand.busted()) {
         console.log("Dealer's hand:", dealerHand.showCard(), dealerHand.points);
         console.log("Dealer busted! Player wins!");
         break;
