@@ -7,7 +7,7 @@ body {
 #player-cards img {
   height: 12%;
   width: 12%;
-  margin: 1px;
+  margin: 10px;
 }
 
 #hit,
@@ -59,4 +59,8 @@ body {
   border-radius: 5px;
   text-align: center;
   z-index: 1000;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

@@ -149,7 +149,7 @@ function initializeGame() {
         let hiddenCardImg = document.getElementById("hidden-card");
         hiddenCardImg.src = `PNG-cards-1.3/${dealerHand.cards[1].value}_of_${dealerHand.cards[1].suit}.png`;
       }
-    }, 3000);
+    }, 2000);
   }
 }
 
@@ -179,14 +179,14 @@ function showNotification(message) {
   notification.style.display = "block";
   setTimeout(function () {
     notification.style.display = "none";
-  }, 3000); // Hide the notification after 2 seconds
+  }, 2000); // Hide the notification after 2 seconds
 }
 
 function stay() {
+  playHitSound();
   canHit = false;
   let hiddenCardImg = document.getElementById("hidden-card");
   hiddenCardImg.src = `PNG-cards-1.3/${dealerHand.cards[1].value}_of_${dealerHand.cards[1].suit}.png`;
-  // how to wait for 2 seconds before showing any new notifications
   setTimeout(
     function () {
       while (dealerHand.points < 17) {
@@ -210,8 +210,13 @@ function stay() {
         }
       }
     },
-    playerHand.busted() ? 3000 : 0
+    playerHand.busted() ? 2000 : 0
   );
+}
+
+function playHitSound() {
+  let audio = new Audio("sfx/hit_card.mp3");
+  audio.play();
 }
 
 function hit() {
@@ -219,6 +224,7 @@ function hit() {
     return;
   }
   playerHand.addCardPlayer(allDecks.pop());
+  playHitSound();
   if (playerHand.busted()) {
     showNotification("You busted!");
     stay();
