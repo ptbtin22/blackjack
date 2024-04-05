@@ -205,23 +205,23 @@ function stay() {
       while (dealerHand.points < 17) {
         dealerHand.addCardDealer(allDecks.pop());
       }
+      let result;
       if (hasBlackJack(dealerHand)) {
-        showNotification("The dealer has BlackJack! Dealer wins!");
+        result = "Dealer has BlackJack! Dealer wins!";
       } else if (dealerHand.busted() && playerHand.busted()) {
-        showNotification("Dealer busted! It's a draw!");
-      } else if (dealerHand.busted() && !playerHand.busted()) {
-        showNotification("Dealer busted! You won!");
-      } else if (!dealerHand.busted() && playerHand.busted()) {
-        showNotification("Dealer wins!");
-      } else if (!dealerHand.busted() && !playerHand.busted()) {
-        if (dealerHand.points === playerHand.points) {
-          showNotification("It's a draw!");
-        } else if (dealerHand.points > playerHand.points) {
-          showNotification("Dealer wins!");
-        } else {
-          showNotification("You won!");
-        }
+        result = "Dealer busted! It's a draw!";
+      } else if (dealerHand.busted()) {
+        result = "Dealer busted! You won!";
+      } else if (playerHand.busted()) {
+        result = "Dealer wins!";
+      } else if (dealerHand.points === playerHand.points) {
+        result = "It's a draw!";
+      } else if (dealerHand.points > playerHand.points) {
+        result = "Dealer wins!";
+      } else {
+        result = "You won!";
       }
+      showNotification(result);
     },
     playerHand.busted() ? 2000 : 0
   );
@@ -240,7 +240,6 @@ function hit() {
   playHitSound();
   if (playerHand.busted()) {
     showNotification("You busted!");
-
     stay();
   }
 }
