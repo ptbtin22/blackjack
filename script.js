@@ -143,13 +143,20 @@ function initializeGame() {
     showNotification("You have blackjack!");
     setTimeout(function () {
       if (hasBlackJack(dealerHand)) {
-        showNotification("Dealer also have BlackJack! It's a draw!");
+        showNotification("Dealer also has BlackJack! It's a draw!");
       } else {
         showNotification("Dealer doesn't have BlackJack! You won!");
-        let hiddenCardImg = document.getElementById("hidden-card");
-        hiddenCardImg.src = `PNG-cards-1.3/${dealerHand.cards[1].value}_of_${dealerHand.cards[1].suit}.png`;
       }
+      let hiddenCardImg = document.getElementById("hidden-card");
+      hiddenCardImg.src = `PNG-cards-1.3/${dealerHand.cards[1].value}_of_${dealerHand.cards[1].suit}.png`;
     }, 2000);
+  } else {
+    if (hasBlackJack(dealerHand)) {
+      canHit = false;
+      showNotification("Dealer has BlackJack! Dealer wins");
+      let hiddenCardImg = document.getElementById("hidden-card");
+      hiddenCardImg.src = `PNG-cards-1.3/${dealerHand.cards[1].value}_of_${dealerHand.cards[1].suit}.png`;
+    }
   }
 }
 
@@ -227,6 +234,7 @@ function hit() {
   playHitSound();
   if (playerHand.busted()) {
     showNotification("You busted!");
+
     stay();
   }
 }
