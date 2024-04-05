@@ -138,9 +138,13 @@ function initializeGame() {
   shuffleDeck();
   dealCards();
   canHit = true;
+  document.getElementById("stay").disabled = false;
+  document.getElementById("hit").disabled = false;
   if (hasBlackJack(playerHand)) {
     canHit = false;
     showNotification("You have blackjack!");
+    document.getElementById("stay").disabled = true;
+    document.getElementById("hit").disabled = true;
     setTimeout(function () {
       if (hasBlackJack(dealerHand)) {
         showNotification("Dealer also has BlackJack! It's a draw!");
@@ -152,6 +156,8 @@ function initializeGame() {
     }, 2000);
   } else {
     if (hasBlackJack(dealerHand)) {
+      document.getElementById("stay").disabled = true;
+      document.getElementById("hit").disabled = true;
       canHit = false;
       showNotification("Dealer has BlackJack! Dealer wins");
       let hiddenCardImg = document.getElementById("hidden-card");
