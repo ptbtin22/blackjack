@@ -137,6 +137,7 @@ function initializeGame() {
   allDecks = [];
   shuffleDeck();
   dealCards();
+  canHit = true;
   if (hasBlackJack(playerHand)) {
     canHit = false;
     showNotification("You have blackjack!");
@@ -166,8 +167,6 @@ function next_game() {
   document.getElementById("player-cards").innerHTML = "";
   document.getElementById("dealer-cards").innerHTML = "";
 
-  canHit = true;
-
   initializeGame();
 }
 
@@ -184,8 +183,29 @@ function stay() {
   canHit = false;
   let hiddenCardImg = document.getElementById("hidden-card");
   hiddenCardImg.src = `PNG-cards-1.3/${dealerHand.cards[1].value}_of_${dealerHand.cards[1].suit}.png`;
+  if (hasBlackJack(dealerHand)) {
+    showNotification("The dealer has BlackJack!");
+  }
   while (dealerHand.points < 17) {
     dealerHand.addCardDealer(allDecks.pop());
+  }
+  if (dealerHand.busted() && playerHand.busted()) {
+    showNotification("Dealer busted! It's a draw!");
+  }
+  if (dealerHand.busted() && !playerHand.busted()) {
+    showNotification("Dealer busted! You won!");
+  }
+  if (!dealerHand.busted() && playerHand.busted()) {
+    showNotification("Dealer wins!");
+  }
+  if (!dealerHand.busted() && !playerHand.busted()) {
+    if (dealerHand.points === playerHand.points) {
+      showNotification("It's a draw!");
+    } else if (dealerHand.points > playerHand.points) {
+      showNotification("Dealer wins!");
+    } else {
+      showNotification("You won!");
+    }
   }
 }
 
@@ -195,6 +215,7 @@ function hit() {
   }
   playerHand.addCardPlayer(allDecks.pop());
   if (playerHand.busted()) {
+    showNotification("You busted!");
     stay();
   }
 }
