@@ -2,6 +2,8 @@
 
 let cardImg = document.getElementById("img");
 
+var canHit = true;
+
 const VALUES = [
   "ace",
   "2",
@@ -40,9 +42,33 @@ class Hand {
     this.cards = [];
     this.points = 0;
   }
-  addCard(card) {
+  addCardDealer(card) {
     this.cards.push(card);
     this.points += card.cardPoints;
+    let cardImg = document.createElement("img");
+    if (this.cards.length === 2) {
+      cardImg.src = `PNG-cards-1.3/down_card.jpg`;
+      cardImg.id = "hidden-card";
+    } else {
+      cardImg.src = `PNG-cards-1.3/${card.value}_of_${card.suit}.png`;
+    }
+    document.getElementById("dealer-cards").append(cardImg);
+    if (this.points > 21) {
+      for (let i = 0; i < this.cards.length; i++) {
+        if (this.cards[i].value == "ace") {
+          this.points -= 10;
+          this.cards[i].value = "1"; // change this so that next time it won't subtract another 10
+          if (this.points <= 21) break;
+        }
+      }
+    }
+  }
+  addCardPlayer(card) {
+    this.cards.push(card);
+    this.points += card.cardPoints;
+    let cardImg = document.createElement("img");
+    cardImg.src = `PNG-cards-1.3/${card.value}_of_${card.suit}.png`;
+    document.getElementById("player-cards").append(cardImg);
     if (this.points > 21) {
       for (let i = 0; i < this.cards.length; i++) {
         if (this.cards[i].value == "ace") {
@@ -102,9 +128,9 @@ const shuffleDeck = (num = 1) => {
 const dealCards = () => {
   for (let i = 0; i < 4; i++) {
     if (i % 2 === 0) {
-      playerHand.addCard(allDecks.pop());
+      playerHand.addCardPlayer(allDecks.pop());
     } else {
-      dealerHand.addCard(allDecks.pop());
+      dealerHand.addCardDealer(allDecks.pop());
     }
   }
 };
@@ -127,54 +153,68 @@ function hasBlackJack(hand) {
 const playerHand = new Hand();
 const dealerHand = new Hand();
 
-window.onload = function () {
+function initializeGame() {
+  allDecks = [];
   shuffleDeck();
   dealCards();
-  dealerHand.showHand(1);
-  playerHand.showHand(2);
+  if (hasBlackJack(playerHand)) {
+    canHit = false;
+    showNotification("You have blackjack!");
+    if (hasBlackJack(dealerHand)) {
+      showNotification("Dealer also have blackjack! It's a draw!");
+    } else {
+      let hiddenCardImg = document.getElementById("hidden-card");
+      hiddenCardImg.src = `PNG-cards-1.3/${dealerHand.cards[1].value}_of_${dealerHand.cards[1].suit}.png`;
+    }
+  }
+}
+
+window.onload = function () {
+  initializeGame();
+  document.getElementById("hit").addEventListener("click", hit);
+  document.getElementById("stay").addEventListener("click", stay);
+  document.getElementById("next-game").addEventListener("click", next_game);
 };
 
-/* if (hasBlackJack(playerHand)) {
-  console.log("Player has BlackJack!");
-  console.log(
-    "Dealer's hand revealed:",
-    dealerHand.showCard(),
-    dealerHand.points
-  );
-  if (hasBlackJack(dealerHand)) {
-    console.log("It's a draw!");
-  } else {
-    console.log("You win!");
+function next_game() {
+  playerHand.cards = [];
+  dealerHand.cards = [];
+
+  playerHand.points = 0;
+  dealerHand.points = 0;
+
+  document.getElementById("player-cards").innerHTML = "";
+  document.getElementById("dealer-cards").innerHTML = "";
+
+  canHit = true;
+
+  initializeGame();
+}
+
+function showNotification(message) {
+  let notification = document.getElementById("notification");
+  notification.textContent = message;
+  notification.style.display = "block";
+  setTimeout(function () {
+    notification.style.display = "none";
+  }, 2000); // Hide the notification after 2 seconds
+}
+
+function stay() {
+  canHit = false;
+  let hiddenCardImg = document.getElementById("hidden-card");
+  hiddenCardImg.src = `PNG-cards-1.3/${dealerHand.cards[1].value}_of_${dealerHand.cards[1].suit}.png`;
+  while (dealerHand.points < 17) {
+    dealerHand.addCardDealer(allDecks.pop());
   }
-} else {
-  if (hasBlackJack(dealerHand)) {
-    console.log("Sorry, dealer has BlackJack! Dealer wins!");
-    console.log("Dealer's hand:", dealerHand.showCard(), dealerHand.points);
-  } else {
-    do {
-      const playerChoice = prompt("Hit or stay: ");
-      if (playerChoice.toLowerCase() == "stay") {
-        break;
-      } else if (playerChoice.toLowerCase() == "hit") {
-        playerHand.addCard(allDecks[idx++]);
-        console.log("Player's hand:", playerHand.showCard(), playerHand.points);
-      }
-    } while (!playerHand.busted());
-    console.log(
-      "Dealer's hand revealed:",
-      dealerHand.showCard(),
-      dealerHand.points
-    );
-    while (dealerHand.points < 17) {
-      dealerHand.addCard(allDecks[idx++]);
-      console.log("Dealer's hand:", dealerHand.showCard(), dealerHand.points);
-    }
-    if (dealerHand.busted() && playerHand.busted()) {
-      console.log("It's a draw!");
-    } else if (dealerHand.busted && !playerHand.busted()) {
-      console.log("Player wins!");
-    } else {
-      console.log("Dealer wins");
-    }
+}
+
+function hit() {
+  if (!canHit) {
+    return;
   }
-} */
+  playerHand.addCardPlayer(allDecks.pop());
+  if (playerHand.busted()) {
+    stay();
+  }
+}
