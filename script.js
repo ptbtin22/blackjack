@@ -52,10 +52,10 @@ class Hand {
     }
     document.getElementById("dealer-cards").append(cardImg);
     if (this.points > 21) {
-      for (let i = 0; i < this.cards.length; i++) {
-        if (this.cards[i].value == "ace") {
+      for (const card of this.cards) {
+        if (card.value == "ace") {
           this.points -= 10;
-          this.cards[i].value = "1"; // change this so that next time it won't subtract another 10
+          card.value = "1"; // change this so that next time it won't subtract another 10
           if (this.points <= 21) break;
         }
       }
@@ -79,24 +79,6 @@ class Hand {
   }
   busted() {
     return this.points > 21;
-  }
-  showHand(kind) {
-    if (kind === 1) {
-      this.cards.forEach((card) => {
-        let cardImg = document.createElement("img");
-        cardImg.src = `PNG-cards-1.3/${card.value}_of_${card.suit}.png`;
-        document.getElementById("dealer-cards").append(cardImg);
-      });
-    } else if (kind === 2) {
-      this.cards.forEach((card) => {
-        let cardImg = document.createElement("img");
-        cardImg.src = `PNG-cards-1.3/${card.value}_of_${card.suit}.png`;
-        document.getElementById("player-cards").append(cardImg);
-      });
-    }
-  }
-  showCard_Hidden() {
-    return `${this.cards[0].value + this.cards[0].suit}  (hidden)`;
   }
 }
 
