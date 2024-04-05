@@ -1,7 +1,5 @@
 "use strict";
 
-let cardImg = document.getElementById("img");
-
 var canHit = true;
 
 const VALUES = [
