@@ -141,12 +141,15 @@ function initializeGame() {
   if (hasBlackJack(playerHand)) {
     canHit = false;
     showNotification("You have blackjack!");
-    if (hasBlackJack(dealerHand)) {
-      showNotification("Dealer also have blackjack! It's a draw!");
-    } else {
-      let hiddenCardImg = document.getElementById("hidden-card");
-      hiddenCardImg.src = `PNG-cards-1.3/${dealerHand.cards[1].value}_of_${dealerHand.cards[1].suit}.png`;
-    }
+    setTimeout(function () {
+      if (hasBlackJack(dealerHand)) {
+        showNotification("Dealer also have BlackJack! It's a draw!");
+      } else {
+        showNotification("Dealer doesn't have BlackJack! You won!");
+        let hiddenCardImg = document.getElementById("hidden-card");
+        hiddenCardImg.src = `PNG-cards-1.3/${dealerHand.cards[1].value}_of_${dealerHand.cards[1].suit}.png`;
+      }
+    }, 3000);
   }
 }
 
@@ -176,37 +179,39 @@ function showNotification(message) {
   notification.style.display = "block";
   setTimeout(function () {
     notification.style.display = "none";
-  }, 2000); // Hide the notification after 2 seconds
+  }, 3000); // Hide the notification after 2 seconds
 }
 
 function stay() {
   canHit = false;
   let hiddenCardImg = document.getElementById("hidden-card");
   hiddenCardImg.src = `PNG-cards-1.3/${dealerHand.cards[1].value}_of_${dealerHand.cards[1].suit}.png`;
-  if (hasBlackJack(dealerHand)) {
-    showNotification("The dealer has BlackJack!");
-  }
-  while (dealerHand.points < 17) {
-    dealerHand.addCardDealer(allDecks.pop());
-  }
-  if (dealerHand.busted() && playerHand.busted()) {
-    showNotification("Dealer busted! It's a draw!");
-  }
-  if (dealerHand.busted() && !playerHand.busted()) {
-    showNotification("Dealer busted! You won!");
-  }
-  if (!dealerHand.busted() && playerHand.busted()) {
-    showNotification("Dealer wins!");
-  }
-  if (!dealerHand.busted() && !playerHand.busted()) {
-    if (dealerHand.points === playerHand.points) {
-      showNotification("It's a draw!");
-    } else if (dealerHand.points > playerHand.points) {
-      showNotification("Dealer wins!");
-    } else {
-      showNotification("You won!");
-    }
-  }
+  // how to wait for 2 seconds before showing any new notifications
+  setTimeout(
+    function () {
+      while (dealerHand.points < 17) {
+        dealerHand.addCardDealer(allDecks.pop());
+      }
+      if (hasBlackJack(dealerHand)) {
+        showNotification("The dealer has BlackJack! Dealer wins!");
+      } else if (dealerHand.busted() && playerHand.busted()) {
+        showNotification("Dealer busted! It's a draw!");
+      } else if (dealerHand.busted() && !playerHand.busted()) {
+        showNotification("Dealer busted! You won!");
+      } else if (!dealerHand.busted() && playerHand.busted()) {
+        showNotification("Dealer wins!");
+      } else if (!dealerHand.busted() && !playerHand.busted()) {
+        if (dealerHand.points === playerHand.points) {
+          showNotification("It's a draw!");
+        } else if (dealerHand.points > playerHand.points) {
+          showNotification("Dealer wins!");
+        } else {
+          showNotification("You won!");
+        }
+      }
+    },
+    playerHand.busted() ? 3000 : 0
+  );
 }
 
 function hit() {
